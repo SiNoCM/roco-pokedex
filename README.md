@@ -1,15 +1,15 @@
-# 洛克王国精灵图鉴
+# 《洛克王国·世界》精灵图鉴
 
 基于 React + TypeScript + Vite 构建的洛克王国世界精灵图鉴 Web 应用，收录 347 只精灵完整数据。
 
 ## 在线访问
 
-🌐 [https://sinocm.github.io/roco-pokedex/](https://sinocm.github.io/roco-pokedex/)
+[https://sinocm.github.io/roco-pokedex/](https://sinocm.github.io/roco-pokedex/)
 
 ## 功能特点
 
 - **精灵图鉴**：收录 347 只精灵，支持按属性筛选、搜索、排序
-- **属性克制系统**：18×18 完整属性克制表，支持双属性叠加计算（4x/2x/1x/½x/¼x/免疫）
+- **属性克制系统**：18x18 完整属性克制表，支持双属性叠加计算（4x/2x/1x/0.5x/0.25x/免疫）
 - **游戏图标整合**：598 个游戏原始图标（469 技能 + 129 特性），18 种属性图标
 - **赛季异色系统**：S1「暗夜拾光」46 只 + S2「狂欢怪谈」15 只异色精灵
 - **进化链导航**：详情页底部展示同进化链精灵，支持一键跳转
@@ -52,25 +52,33 @@
 ## 更新日志
 
 ### 2026-05-20
-- 🎨 UI 设计语言统一优化（参照 shadcn/ui 规范）
-  - 圆角统一：卡片 `rounded-xl`、标签 `rounded-full`、按钮 `rounded-lg`
-  - 阴影统一：所有 section card 添加 `shadow-sm`
-  - 边框统一：所有 section card 添加 `border border-gray-100`
-  - 间距统一：详情页响应式水平间距 `sm:px-6 lg:px-8`
-  - Header 透明度统一：`bg-white/80 backdrop-blur-md`
-  - Section 标题字号统一：`text-sm font-semibold`
-  - 背景色统一：body 背景与 Tailwind `gray-50` 一致
-- 🏷️ 属性筛选改为图标+文字形式，选中时使用属性对应颜色
-- 🎪 S1/S2 赛季专属 SVG 图标（暗夜星光/马戏扑克）
-- 🔗 进化链导航（详情页底部同链精灵跳转）
-- 📋 S1/S2 异色筛选按钮
-- 🛡️ 属性克制系统（18×18 完整克制表 + 双属性叠加）
-- 🎮 游戏图标整合（598 个技能/特性图标 + 18 种属性图标）
-- 📸 S2赛季「狂欢怪谈」异色精灵数据（15只）
-- 🔄 多赛季架构重构（s1Variant → seasonVariant）
-- 🖼️ 图片 WebP 压缩优化（52MB → 22MB）
+
+**S2赛季平衡性调整数据更新**
+- 19 只精灵种族值调整（黑猫巫师/圆号鱼/爵士鹿/古啦多/高脚鹬/彩蝶鲨等）
+- 16 个技能威力与能耗调整（截拳/阻断/斩断/触底强击/落雷/虫群过境等）
+- 数据来源：官方 S2 赛季更新公告
+
+**UI 设计语言统一优化（参照 shadcn/ui 规范）**
+- 圆角统一：卡片 `rounded-xl`、标签 `rounded-full`、按钮 `rounded-lg`
+- 阴影统一：所有 section card 添加 `shadow-sm`
+- 边框统一：所有 section card 添加 `border border-gray-100`
+- 间距统一：详情页响应式水平间距 `sm:px-6 lg:px-8`
+- Section 标题字号统一：`text-sm font-semibold`
+- 背景色统一：body 背景与 Tailwind `gray-50` 一致
+
+**功能新增**
+- 属性筛选改为图标+文字形式，选中时使用属性对应颜色
+- S1/S2 赛季专属 SVG 图标（暗夜星光/马戏扑克）
+- S1/S2 异色筛选按钮
+- 进化链导航（详情页底部同链精灵跳转）
+- 属性克制系统（18x18 完整克制表 + 双属性叠加）
+- 游戏图标整合（598 个技能/特性图标 + 18 种属性图标）
+- S2 赛季「狂欢怪谈」异色精灵数据（15 只）
+- 多赛季架构重构（s1Variant -> seasonVariant）
+- 图片 WebP 压缩优化（52MB -> 22MB）
 
 ### 2026-05-19
+
 - 初始版本上线
 - 347 只精灵图鉴数据
 - GitHub Pages 部署
