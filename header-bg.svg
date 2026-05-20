@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 200" preserveAspectRatio="none">
+  <defs>
+    <!-- 主背景渐变 -->
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1C1917"/>
+      <stop offset="30%" stop-color="#292524"/>
+      <stop offset="60%" stop-color="#3B0764"/>
+      <stop offset="100%" stop-color="#1E1B4B"/>
+    </linearGradient>
+    <!-- 金色光晕 -->
+    <radialGradient id="glow1" cx="20%" cy="50%" r="40%">
+      <stop offset="0%" stop-color="#FBBF24" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#FBBF24" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="80%" cy="30%" r="35%">
+      <stop offset="0%" stop-color="#DC2626" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#DC2626" stop-opacity="0"/>
+    </radialGradient>
+    <!-- 菱形图案 -->
+    <pattern id="diamonds" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M30 10L40 30L30 50L20 30Z" fill="none" stroke="#FBBF24" stroke-opacity="0.06" stroke-width="0.5"/>
+    </pattern>
+  </defs>
+  <!-- 背景 -->
+  <rect width="1280" height="200" fill="url(#bg)"/>
+  <!-- 光晕 -->
+  <rect width="1280" height="200" fill="url(#glow1)"/>
+  <rect width="1280" height="200" fill="url(#glow2)"/>
+  <!-- 菱形纹理 -->
+  <rect width="1280" height="200" fill="url(#diamonds)"/>
+  <!-- 装饰星光点 -->
+  <circle cx="150" cy="40" r="1.5" fill="#FBBF24" opacity="0.3"/>
+  <circle cx="350" cy="80" r="1" fill="#FDE68A" opacity="0.25"/>
+  <circle cx="520" cy="30" r="1.2" fill="#FBBF24" opacity="0.2"/>
+  <circle cx="680" cy="120" r="1" fill="#FDE68A" opacity="0.3"/>
+  <circle cx="850" cy="50" r="1.5" fill="#FBBF24" opacity="0.2"/>
+  <circle cx="1000" cy="90" r="1" fill="#FDE68A" opacity="0.25"/>
+  <circle cx="1150" cy="35" r="1.2" fill="#FBBF24" opacity="0.3"/>
+  <circle cx="250" cy="150" r="0.8" fill="#FDE68A" opacity="0.2"/>
+  <circle cx="450" cy="170" r="1" fill="#FBBF24" opacity="0.15"/>
+  <circle cx="750" cy="160" r="1.2" fill="#FDE68A" opacity="0.2"/>
+  <circle cx="1050" cy="155" r="0.8" fill="#FBBF24" opacity="0.25"/>
+  <!-- 底部渐变遮罩（与白色内容区过渡） -->
+  <defs>
+    <linearGradient id="fade" x1="0%" y1="70%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1E1B4B" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#F9FAFB" stop-opacity="1"/>
+    </linearGradient>
+  </defs>
+  <rect y="140" width="1280" height="60" fill="url(#fade)"/>
+</svg>
