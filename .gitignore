@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Build temp
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Prevent root-level image files (should be in images/)
+/*.webp
+/*.png
+/*.jpg
+/*.gif
