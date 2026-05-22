@@ -2,12 +2,17 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="theme-color" content="#F9FAFB" />
     <title>《洛克王国·世界》精灵图鉴</title>
+    
+    <!-- 预加载关键资源 -->
+    <link rel="preload" href="./assets/index-CX5B3Qh1.js" as="script" crossorigin>
+    <link rel="preload" href="./assets/index-BMwEmXte.css" as="style" crossorigin>
+    
     <style>
       /* iOS Safe Area Support */
       .h-safe-area-inset-bottom {
@@ -45,11 +50,106 @@
       .slide-in-from-top-2 {
         animation-name: slide-in-from-top;
       }
+      
+      /* 加载骨架屏 */
+      #loading-skeleton {
+        position: fixed;
+        inset: 0;
+        background: #F9FAFB;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        transition: opacity 0.3s ease;
+      }
+      
+      #loading-skeleton.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+      
+      .skeleton-title {
+        width: 200px;
+        height: 28px;
+        background: linear-gradient(90deg, #E5E7EB 25%, #F3F4F6 50%, #E5E7EB 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        border-radius: 8px;
+        margin-bottom: 24px;
+      }
+      
+      .skeleton-search {
+        width: 280px;
+        height: 40px;
+        background: linear-gradient(90deg, #E5E7EB 25%, #F3F4F6 50%, #E5E7EB 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        border-radius: 20px;
+        margin-bottom: 16px;
+      }
+      
+      .skeleton-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        padding: 0 16px;
+        width: 100%;
+        max-width: 400px;
+      }
+      
+      .skeleton-card {
+        aspect-ratio: 1;
+        background: linear-gradient(90deg, #E5E7EB 25%, #F3F4F6 50%, #E5E7EB 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        border-radius: 12px;
+      }
+      
+      @keyframes shimmer {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+      }
+      
+      @media (min-width: 640px) {
+        .skeleton-grid {
+          grid-template-columns: repeat(4, 1fr);
+          max-width: 500px;
+        }
+      }
     </style>
-    <script type="module" crossorigin src="./assets/index-CX5B3Qh1.js"></script>
+    
     <link rel="stylesheet" crossorigin href="./assets/index-BMwEmXte.css">
   </head>
   <body>
+    <!-- 加载骨架屏 -->
+    <div id="loading-skeleton">
+      <div class="skeleton-title"></div>
+      <div class="skeleton-search"></div>
+      <div class="skeleton-grid">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+    </div>
+    
     <div id="root"></div>
+    
+    <script>
+      // 隐藏骨架屏
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          var skeleton = document.getElementById('loading-skeleton');
+          if (skeleton) {
+            skeleton.classList.add('hidden');
+            setTimeout(function() { skeleton.remove(); }, 300);
+          }
+        }, 100);
+      });
+    </script>
+    <script type="module" crossorigin src="./assets/index-CX5B3Qh1.js"></script>
   </body>
 </html>
