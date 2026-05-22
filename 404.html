@@ -2,154 +2,34 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="theme-color" content="#F9FAFB" />
-    <title>《洛克王国·世界》精灵图鉴</title>
-    
-    <!-- 预加载关键资源 -->
-    <link rel="preload" href="./assets/index-CX5B3Qh1.js" as="script" crossorigin>
-    <link rel="preload" href="./assets/index-BMwEmXte.css" as="style" crossorigin>
-    
-    <style>
-      /* iOS Safe Area Support */
-      .h-safe-area-inset-bottom {
-        height: env(safe-area-inset-bottom, 0px);
-      }
-      
-      /* Hide scrollbar for Chrome, Safari and Opera */
-      .scrollbar-hide::-webkit-scrollbar {
-        display: none;
-      }
-      
-      /* Hide scrollbar for IE, Edge and Firefox */
-      .scrollbar-hide {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-      }
-      
-      /* Animation utilities */
-      @keyframes slide-in-from-top {
-        from {
-          opacity: 0;
-          transform: translateY(-10px);
+    <title>《洛克王国·世界》精灵图鉴 - 页面跳转中...</title>
+    <!--
+      GitHub Pages SPA 重定向脚本
+      当用户直接访问子路径时，404.html 会被 GitHub Pages 返回。
+      此脚本保存目标路径到 sessionStorage，然后重定向到首页，
+      index.html 中的脚本会恢复路径。
+    -->
+    <script>
+      (function () {
+        var basePath = '/roco-pokedex/';
+        // 将当前路径保存到 sessionStorage
+        var redirectPath = window.location.pathname;
+        if (redirectPath !== basePath) {
+          try {
+            sessionStorage.setItem('roco_redirect', redirectPath + window.location.search + window.location.hash);
+          } catch (e) {}
         }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      
-      .animate-in {
-        animation-duration: 0.2s;
-        animation-fill-mode: both;
-      }
-      
-      .slide-in-from-top-2 {
-        animation-name: slide-in-from-top;
-      }
-      
-      /* 加载骨架屏 */
-      #loading-skeleton {
-        position: fixed;
-        inset: 0;
-        background: #F9FAFB;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        z-index: 9999;
-        transition: opacity 0.3s ease;
-      }
-      
-      #loading-skeleton.hidden {
-        opacity: 0;
-        pointer-events: none;
-      }
-      
-      .skeleton-title {
-        width: 200px;
-        height: 28px;
-        background: linear-gradient(90deg, #E5E7EB 25%, #F3F4F6 50%, #E5E7EB 75%);
-        background-size: 200% 100%;
-        animation: shimmer 1.5s infinite;
-        border-radius: 8px;
-        margin-bottom: 24px;
-      }
-      
-      .skeleton-search {
-        width: 280px;
-        height: 40px;
-        background: linear-gradient(90deg, #E5E7EB 25%, #F3F4F6 50%, #E5E7EB 75%);
-        background-size: 200% 100%;
-        animation: shimmer 1.5s infinite;
-        border-radius: 20px;
-        margin-bottom: 16px;
-      }
-      
-      .skeleton-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-        padding: 0 16px;
-        width: 100%;
-        max-width: 400px;
-      }
-      
-      .skeleton-card {
-        aspect-ratio: 1;
-        background: linear-gradient(90deg, #E5E7EB 25%, #F3F4F6 50%, #E5E7EB 75%);
-        background-size: 200% 100%;
-        animation: shimmer 1.5s infinite;
-        border-radius: 12px;
-      }
-      
-      @keyframes shimmer {
-        0% { background-position: 200% 0; }
-        100% { background-position: -200% 0; }
-      }
-      
-      @media (min-width: 640px) {
-        .skeleton-grid {
-          grid-template-columns: repeat(4, 1fr);
-          max-width: 500px;
-        }
-      }
-    </style>
-    
-    <link rel="stylesheet" crossorigin href="./assets/index-BMwEmXte.css">
+        // 重定向到首页
+        window.location.replace(basePath);
+      })();
+    </script>
   </head>
   <body>
-    <!-- 加载骨架屏 -->
-    <div id="loading-skeleton">
-      <div class="skeleton-title"></div>
-      <div class="skeleton-search"></div>
-      <div class="skeleton-grid">
-        <div class="skeleton-card"></div>
-        <div class="skeleton-card"></div>
-        <div class="skeleton-card"></div>
-        <div class="skeleton-card"></div>
-        <div class="skeleton-card"></div>
-        <div class="skeleton-card"></div>
-      </div>
-    </div>
-    
-    <div id="root"></div>
-    
-    <script>
-      // 隐藏骨架屏
-      window.addEventListener('load', function() {
-        setTimeout(function() {
-          var skeleton = document.getElementById('loading-skeleton');
-          if (skeleton) {
-            skeleton.classList.add('hidden');
-            setTimeout(function() { skeleton.remove(); }, 300);
-          }
-        }, 100);
-      });
-    </script>
-    <script type="module" crossorigin src="./assets/index-CX5B3Qh1.js"></script>
+    <p style="text-align:center;font-family:sans-serif;padding-top:40px;">页面跳转中，请稍候...</p>
+    <noscript>
+      <p style="text-align:center;font-family:sans-serif;padding-top:40px;">
+        请 <a href="/roco-pokedex/">点击这里</a> 访问精灵图鉴。
+      </p>
+    </noscript>
   </body>
 </html>

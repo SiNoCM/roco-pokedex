@@ -122,6 +122,25 @@
     <link rel="stylesheet" crossorigin href="./assets/index-BMwEmXte.css">
   </head>
   <body>
+    <!--
+      GitHub Pages SPA 重定向恢复脚本
+      从 sessionStorage 读取 404.html 保存的路径并恢复
+    -->
+    <script>
+      (function () {
+        var redirect = null;
+        try {
+          redirect = sessionStorage.getItem('roco_redirect');
+        } catch (e) {}
+        if (redirect) {
+          try {
+            sessionStorage.removeItem('roco_redirect');
+          } catch (e) {}
+          // 使用 replaceState 恢复路径，不触发页面重新加载
+          window.history.replaceState(null, '', redirect);
+        }
+      })();
+    </script>
     <!-- 加载骨架屏 -->
     <div id="loading-skeleton">
       <div class="skeleton-title"></div>
