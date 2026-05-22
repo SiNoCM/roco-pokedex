@@ -157,18 +157,74 @@
     
     <div id="root"></div>
     
+    <!-- 错误降级 UI（默认隐藏） -->
+    <div id="error-fallback" style="display:none;position:fixed;inset:0;background:#F9FAFB;z-index:9998;flex-direction:column;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,sans-serif;padding:24px;text-align:center;">
+      <div style="font-size:64px;margin-bottom:16px;">😿</div>
+      <h2 style="font-size:18px;font-weight:600;color:#1C1C1E;margin-bottom:8px;">页面加载失败</h2>
+      <p style="font-size:14px;color:#8E8E93;margin-bottom:24px;max-width:280px;">请检查网络连接后刷新重试，或稍后再来探索精灵世界。</p>
+      <button onclick="location.reload()" style="background:#007AFF;color:#fff;border:none;padding:12px 32px;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;">重新加载</button>
+    </div>
+    
     <script>
-      // 隐藏骨架屏
-      window.addEventListener('load', function() {
-        setTimeout(function() {
-          var skeleton = document.getElementById('loading-skeleton');
+      // ======== 防御性加载与错误处理 ========
+      (function () {
+        var skeleton = document.getElementById('loading-skeleton');
+        var errorFallback = document.getElementById('error-fallback');
+        var root = document.getElementById('root');
+        var isLoaded = false;
+        
+        // 5 秒后如果还没加载完成，显示错误 UI
+        var loadTimeout = setTimeout(function () {
+          if (!isLoaded) {
+            if (skeleton) { skeleton.style.display = 'none'; }
+            if (errorFallback) { errorFallback.style.display = 'flex'; }
+            if (root) { root.style.display = 'none'; }
+          }
+        }, 8000);
+        
+        // 监听 JS 模块加载成功
+        window.__appLoaded = function () {
+          isLoaded = true;
+          clearTimeout(loadTimeout);
           if (skeleton) {
             skeleton.classList.add('hidden');
-            setTimeout(function() { skeleton.remove(); }, 300);
+            setTimeout(function () { if (skeleton) skeleton.remove(); }, 300);
           }
-        }, 100);
-      });
+        };
+        
+        // 骨架屏隐藏（正常流程）
+        window.addEventListener('load', function () {
+          setTimeout(function () {
+            if (!isLoaded) {
+              // 还没调用 __appLoaded，再等 3 秒
+              setTimeout(function () {
+                if (!isLoaded) {
+                  // 仍未加载，显示错误
+                  if (skeleton) { skeleton.style.display = 'none'; }
+                  if (errorFallback) { errorFallback.style.display = 'flex'; }
+                }
+              }, 3000);
+            }
+          }, 100);
+        });
+        
+        // 全局 JS 错误捕获
+        window.addEventListener('error', function (e) {
+          // 只处理运行时错误（非资源加载错误）
+          if (e.target === window && !isLoaded) {
+            clearTimeout(loadTimeout);
+            if (skeleton) { skeleton.style.display = 'none'; }
+            if (errorFallback) { errorFallback.style.display = 'flex'; }
+          }
+        });
+        
+        // 未处理的 Promise 拒绝
+        window.addEventListener('unhandledrejection', function (e) {
+          console.warn('[Pokedex] Unhandled rejection:', e.reason);
+          // 不让未捕获的 rejection 完全破坏体验，但记录日志
+        });
+      })();
     </script>
-    <script type="module" crossorigin src="./assets/index-CX5B3Qh1.js"></script>
+    <script type="module" crossorigin src="./assets/index-CX5B3Qh1.js" onerror="(function(){var s=document.getElementById('loading-skeleton');var e=document.getElementById('error-fallback');if(s)s.style.display='none';if(e)e.style.display='flex';})()"></script>
   </body>
 </html>
