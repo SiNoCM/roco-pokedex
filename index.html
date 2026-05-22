@@ -172,57 +172,106 @@
         var errorFallback = document.getElementById('error-fallback');
         var root = document.getElementById('root');
         var isLoaded = false;
-        
-        // 5 秒后如果还没加载完成，显示错误 UI
-        var loadTimeout = setTimeout(function () {
-          if (!isLoaded) {
-            if (skeleton) { skeleton.style.display = 'none'; }
-            if (errorFallback) { errorFallback.style.display = 'flex'; }
-            if (root) { root.style.display = 'none'; }
-          }
-        }, 8000);
-        
-        // 监听 JS 模块加载成功
-        window.__appLoaded = function () {
+        var loadTimer = null;
+        var maxWait = 12000; // 最大等待 12 秒
+        var loadStart = Date.now();
+
+        // 显示错误 UI 的通用函数
+        function showError() {
+          if (isLoaded) return;
+          isLoaded = true; // 防止重复触发
+          if (loadTimer) clearTimeout(loadTimer);
+          if (skeleton) { skeleton.style.display = 'none'; }
+          if (errorFallback) { errorFallback.style.display = 'flex'; }
+        }
+
+        // 隐藏骨架屏，正常启动
+        function hideSkeleton() {
+          if (isLoaded) return;
           isLoaded = true;
-          clearTimeout(loadTimeout);
+          if (loadTimer) clearTimeout(loadTimer);
           if (skeleton) {
             skeleton.classList.add('hidden');
             setTimeout(function () { if (skeleton) skeleton.remove(); }, 300);
           }
-        };
-        
-        // 骨架屏隐藏（正常流程）
-        window.addEventListener('load', function () {
-          setTimeout(function () {
-            if (!isLoaded) {
-              // 还没调用 __appLoaded，再等 3 秒
-              setTimeout(function () {
-                if (!isLoaded) {
-                  // 仍未加载，显示错误
-                  if (skeleton) { skeleton.style.display = 'none'; }
-                  if (errorFallback) { errorFallback.style.display = 'flex'; }
-                }
-              }, 3000);
+        }
+
+        // === 策略 1: MutationObserver 检测 React 挂载 ===
+        if (root) {
+          var observer = new MutationObserver(function (mutations) {
+            for (var i = 0; i < mutations.length; i++) {
+              var addedNodes = mutations[i].addedNodes;
+              if (addedNodes && addedNodes.length > 0) {
+                // React 已渲染内容到 #root
+                var elapsed = Date.now() - loadStart;
+                // 给 100ms 缓冲让样式和应用就绪
+                setTimeout(hideSkeleton, elapsed < 500 ? 200 : 50);
+                observer.disconnect();
+                return;
+              }
             }
-          }, 100);
+          });
+          observer.observe(root, { childList: true, subtree: true });
+        }
+
+        // === 策略 2: window.__appLoaded 回调（JS bundle 可选调用）===
+        window.__appLoaded = function () {
+          hideSkeleton();
+          if (observer) observer.disconnect();
+        };
+
+        // === 策略 3: load 事件后等待 3 秒 ===
+        window.addEventListener('load', function () {
+          loadTimer = setTimeout(function () {
+            if (!isLoaded) {
+              // 仍未加载 → 显示错误
+              showError();
+            }
+          }, 3000);
         });
-        
-        // 全局 JS 错误捕获
+
+        // === 策略 4: 全局超时兜底 ===
+        var maxTimeout = setTimeout(function () {
+          if (!isLoaded) {
+            showError();
+          }
+        }, maxWait);
+
+        // 加载完成时清除最大超时
+        var origHide = hideSkeleton;
+        hideSkeleton = function () {
+          clearTimeout(maxTimeout);
+          origHide();
+        };
+
+        // === 全局 JS 运行时错误捕获 ===
         window.addEventListener('error', function (e) {
-          // 只处理运行时错误（非资源加载错误）
-          if (e.target === window && !isLoaded) {
-            clearTimeout(loadTimeout);
-            if (skeleton) { skeleton.style.display = 'none'; }
-            if (errorFallback) { errorFallback.style.display = 'flex'; }
+          if (e.target === window) {
+            // 运行时错误（非资源加载错误）
+            console.error('[Pokedex] Runtime error:', e.message || e.error);
+            showError();
+          }
+          // 资源加载错误（如 <img src="x"> 失败）不触发全局降级
+        }, true);
+
+        // === 未处理的 Promise 拒绝 ===
+        window.addEventListener('unhandledrejection', function (e) {
+          console.error('[Pokedex] Unhandled rejection:', e.reason);
+          // 记录但不降级，让 React 的错误边界处理
+          // 仅在 5 秒内出现 3 次以上 rejection 时降级
+          if (!window.__pokedexRejectionCount) {
+            window.__pokedexRejectionCount = 0;
+          }
+          window.__pokedexRejectionCount++;
+          if (window.__pokedexRejectionCount >= 3 && !isLoaded) {
+            showError();
           }
         });
-        
-        // 未处理的 Promise 拒绝
-        window.addEventListener('unhandledrejection', function (e) {
-          console.warn('[Pokedex] Unhandled rejection:', e.reason);
-          // 不让未捕获的 rejection 完全破坏体验，但记录日志
-        });
+
+        // 每分钟重置 rejection 计数
+        setInterval(function () {
+          window.__pokedexRejectionCount = 0;
+        }, 60000);
       })();
     </script>
     <script type="module" crossorigin src="./assets/index-CX5B3Qh1.js" onerror="(function(){var s=document.getElementById('loading-skeleton');var e=document.getElementById('error-fallback');if(s)s.style.display='none';if(e)e.style.display='flex';})()"></script>
