@@ -3,33 +3,47 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="theme-color" content="#F9FAFB" />
+
+    <!-- SEO -->
+    <meta name="description" content="《洛克王国·世界》精灵图鉴 - 收录375只精灵的完整数据，包括种族值、属性、特性、进化链等信息" />
+    <meta name="keywords" content="洛克王国,洛克王国世界,精灵图鉴,宠物图鉴,种族值" />
+    <meta name="author" content="SiNoCM" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="《洛克王国·世界》精灵图鉴" />
+    <meta property="og:description" content="收录375只精灵的完整数据，包括种族值、属性、特性、进化链等信息" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://sinocm.github.io/roco-pokedex/" />
+
     <title>《洛克王国·世界》精灵图鉴</title>
-    
-    <!-- 预加载关键资源 -->
-    <link rel="preload" href="./assets/index-CX5B3Qh1.js" as="script" crossorigin>
+
+    <!-- 预连接关键域名 -->
+    <link rel="preconnect" href="https://sinocm.github.io" crossorigin>
+
+    <!-- 预加载关键CSS（不预加载JS以避免阻塞首屏） -->
     <link rel="preload" href="./assets/index-BMwEmXte.css" as="style" crossorigin>
-    
+
     <style>
       /* iOS Safe Area Support */
       .h-safe-area-inset-bottom {
         height: env(safe-area-inset-bottom, 0px);
       }
-      
+
       /* Hide scrollbar for Chrome, Safari and Opera */
       .scrollbar-hide::-webkit-scrollbar {
         display: none;
       }
-      
+
       /* Hide scrollbar for IE, Edge and Firefox */
       .scrollbar-hide {
         -ms-overflow-style: none;
         scrollbar-width: none;
       }
-      
+
       /* Animation utilities */
       @keyframes slide-in-from-top {
         from {
@@ -41,16 +55,16 @@
           transform: translateY(0);
         }
       }
-      
+
       .animate-in {
         animation-duration: 0.2s;
         animation-fill-mode: both;
       }
-      
+
       .slide-in-from-top-2 {
         animation-name: slide-in-from-top;
       }
-      
+
       /* 加载骨架屏 */
       #loading-skeleton {
         position: fixed;
@@ -63,12 +77,12 @@
         z-index: 9999;
         transition: opacity 0.3s ease;
       }
-      
+
       #loading-skeleton.hidden {
         opacity: 0;
         pointer-events: none;
       }
-      
+
       .skeleton-title {
         width: 200px;
         height: 28px;
@@ -78,7 +92,7 @@
         border-radius: 8px;
         margin-bottom: 24px;
       }
-      
+
       .skeleton-search {
         width: 280px;
         height: 40px;
@@ -88,7 +102,7 @@
         border-radius: 20px;
         margin-bottom: 16px;
       }
-      
+
       .skeleton-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -97,7 +111,7 @@
         width: 100%;
         max-width: 400px;
       }
-      
+
       .skeleton-card {
         aspect-ratio: 1;
         background: linear-gradient(90deg, #E5E7EB 25%, #F3F4F6 50%, #E5E7EB 75%);
@@ -105,12 +119,12 @@
         animation: shimmer 1.5s infinite;
         border-radius: 12px;
       }
-      
+
       @keyframes shimmer {
         0% { background-position: 200% 0; }
         100% { background-position: -200% 0; }
       }
-      
+
       @media (min-width: 640px) {
         .skeleton-grid {
           grid-template-columns: repeat(4, 1fr);
@@ -118,7 +132,7 @@
         }
       }
     </style>
-    
+
     <link rel="stylesheet" crossorigin href="./assets/index-BMwEmXte.css">
   </head>
   <body>
@@ -154,9 +168,9 @@
         <div class="skeleton-card"></div>
       </div>
     </div>
-    
+
     <div id="root"></div>
-    
+
     <script>
       // 隐藏骨架屏
       window.addEventListener('load', function() {
@@ -173,9 +187,11 @@
     <script>
       // Register Service Worker for caching
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('SW registered'))
-          .catch(err => console.log('SW registration failed:', err));
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('./sw.js')
+            .then(function(reg) { console.log('SW registered'); })
+            .catch(function(err) { console.log('SW registration failed:', err); });
+        });
       }
     </script>
   </body>
