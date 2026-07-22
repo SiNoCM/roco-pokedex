@@ -1,4 +1,4 @@
-const CACHE_NAME = 'roco-pokedex-v6';
+const CACHE_NAME = 'roco-pokedex-v7';
 const PRECACHE = ['./', './index.html', './assets/index-CX5B3Qh1.js', './assets/index-BMwEmXte.css', './favicon.svg', './header-bg.svg', './icons.svg'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(PRECACHE)).catch(() => {})); self.skipWaiting(); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))))); self.clients.claim(); });
