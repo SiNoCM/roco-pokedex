@@ -17,8 +17,8 @@
     <link rel="preload" href="./assets/index-BMwEmXte.css" as="style" crossorigin>
     <link rel="stylesheet" crossorigin href="./assets/index-BMwEmXte.css">
 
+    <!-- Skeleton loading screen - shown immediately while JS loads -->
     <style>
-      /* Skeleton loading screen */
       #app-loading{position:fixed;inset:0;background:#F9FAFB;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .3s}
       #app-loading.hide{opacity:0;pointer-events:none}
       .sk{background:linear-gradient(90deg,#E5E7EB 25%,#F3F4F6 50%,#E5E7EB 75%);background-size:200% 100%;animation:sk 1.5s infinite}
@@ -46,34 +46,16 @@
     </div>
     <div id="root"></div>
 
-    <!-- Critical: Load the slim React app first (230KB, renders immediately with empty data) -->
-    <script type="module" crossorigin src="./assets/index-CX5B3Qh1.js"></script>
-    
-    <!-- Then load data asynchronously (non-blocking) -->
-    <script src="./loader.js" defer></script>
+    <!-- Main React app - load with fetchpriority high for fastest parse -->
+    <script type="module" crossorigin fetchpriority="high" src="./assets/index-CX5B3Qh1.js"></script>
 
-    <!-- Hide skeleton after app renders -->
+    <!-- Hide skeleton after app renders, with safety fallback -->
     <script>
-      window.addEventListener('load',function(){
-        setTimeout(function(){
-          var el=document.getElementById('app-loading');
-          if(el){el.classList.add('hide');setTimeout(function(){el.remove()},300)}
-        },200)
-      });
-      // Fallback: hide skeleton after 10s even if app fails
-      setTimeout(function(){
-        var el=document.getElementById('app-loading');
-        if(el){el.classList.add('hide');setTimeout(function(){el.remove()},300)}
-      },10000)
-    </script>
-    
-    <!-- Service Worker for caching -->
-    <script>
-      window.addEventListener('load',function(){
-        if('serviceWorker'in navigator){
-          navigator.serviceWorker.register('./sw.js').catch(function(){})
-        }
-      })
+      function hideSkeleton(){var el=document.getElementById('app-loading');if(el){el.classList.add('hide');setTimeout(function(){el.remove()},300)}}
+      window.addEventListener('load',function(){setTimeout(hideSkeleton,200)});
+      setTimeout(hideSkeleton,15000);
+      // Service Worker for offline caching
+      window.addEventListener('load',function(){if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js').catch(function(){})}});
     </script>
   </body>
 </html>

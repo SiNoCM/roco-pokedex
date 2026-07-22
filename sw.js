@@ -1,73 +1,19 @@
-const CACHE_NAME = 'roco-pokedex-v3';
-
-const PRECACHE_URLS = [
-  './',
-  './index.html',
-  './assets/index-CX5B3Qh1.js',
-  './assets/index-BMwEmXte.css',
-  './favicon.svg',
-  './header-bg.svg',
-  './icons.svg'
-];
-
-// Install: precache shell assets
-self.addEventListener('install', event => {
-  event.waitUntil(
-    Promise.all(
-      PRECACHE_URLS.map(url =>
-        fetch(url).then(res => {
-          if (res.ok) return caches.open(CACHE_NAME).then(c => c.put(url, res));
-        }).catch(() => {})
-      )
-    )
-  );
-  self.skipWaiting();
-});
-
-// Activate: clean old caches
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(names =>
-      Promise.all(names.filter(n => n !== CACHE_NAME).map(n => caches.delete(n)))
-    )
-  );
-  self.clients.claim();
-});
-
-// Cache-first for images
-const IMAGE_RE = /\.(webp|png|jpg|jpeg|svg|ico)$/i;
-
-self.addEventListener('fetch', event => {
-  const { request } = event;
-  const url = new URL(request.url);
-
-  if (request.method !== 'GET') return;
-
-  // Images: cache-first
-  if (IMAGE_RE.test(url.pathname)) {
-    event.respondWith(
-      caches.match(request).then(cached => {
-        const network = fetch(request).then(res => {
-          if (res.ok) caches.open(CACHE_NAME).then(c => c.put(request, res.clone()));
-          return res;
-        }).catch(() => cached);
-        return cached || network;
-      })
-    );
+const CACHE_NAME = 'roco-pokedex-v4';
+const PRECACHE = ['./', './index.html', './assets/index-CX5B3Qh1.js', './assets/index-BMwEmXte.css', './favicon.svg', './header-bg.svg', './icons.svg'];
+self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(PRECACHE)).catch(() => {})); self.skipWaiting(); });
+self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))))); self.clients.claim(); });
+self.addEventListener('fetch', e => {
+  const { request: req } = e;
+  if (req.method !== 'GET') return;
+  const url = new URL(req.url);
+  // Static assets (hashed filenames): cache-first, infinite cache
+  if (/\.(js|css|woff2?|webp|png|svg|ico)$/i.test(url.pathname)) {
+    e.respondWith(caches.match(req).then(cached => cached || fetch(req).then(res => { if (res.ok) caches.open(CACHE_NAME).then(c => c.put(req, res.clone())); return res; }).catch(() => new Response('', { status: 404 }))));
     return;
   }
-
-  // Navigation & assets: stale-while-revalidate
-  if (request.mode === 'navigate' || /\.(js|css|html|json)$/i.test(url.pathname)) {
-    event.respondWith(
-      caches.match(request).then(cached => {
-        const network = fetch(request).then(res => {
-          if (res.ok) caches.open(CACHE_NAME).then(c => c.put(request, res.clone()));
-          return res;
-        }).catch(() => cached);
-        return cached || network;
-      })
-    );
+  // HTML: network-first, fallback to cache
+  if (req.mode === 'navigate' || /\.html?$/i.test(url.pathname)) {
+    e.respondWith(fetch(req).then(res => { if (res.ok) { const clone = res.clone(); caches.open(CACHE_NAME).then(c => c.put(req, clone)); } return res; }).catch(() => caches.match(req) || new Response('Offline', { status: 503 })));
     return;
   }
-});</arg_value>
+});
